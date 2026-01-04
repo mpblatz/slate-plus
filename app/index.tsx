@@ -54,6 +54,9 @@ export default function Index() {
                     <Text style={styles.subtitle}>
                         Card {currentIndex + 1} of {shuffledPrompts.length}
                     </Text>
+                    <Text style={styles.linkText}>
+                        Try the <a href="https://testflight.apple.com/join/BMJT6Cbk">iOS app</a>
+                    </Text>
                 </View>
                 <View style={styles.dropdownContainer}>
                     <TouchableOpacity style={styles.dropdownButton} onPress={() => setIsDropdownOpen(!isDropdownOpen)}>

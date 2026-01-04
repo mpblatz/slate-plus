@@ -246,4 +246,9 @@ export const styles = StyleSheet.create({
         borderColor: "#0f3460",
         marginTop: 20,
     },
+    linkText: {
+        fontSize: 16,
+        color: "#aaa",
+        marginTop: 10,
+    },
 });
