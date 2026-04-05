@@ -49,13 +49,13 @@ export default function Index() {
     if (Platform.OS === "web" && isLandscape) {
         return (
             <View style={styles.desktopContainer}>
-                <View style={styles.header}>
-                    <Text style={styles.title}>Slate Plus</Text>
-                    <Text style={styles.subtitle}>
-                        Card {currentIndex + 1} of {shuffledPrompts.length}
-                    </Text>
-                    <Text style={styles.linkText}>
-                        Try the <a href="https://testflight.apple.com/join/BMJT6Cbk">iOS app</a>
+                <View style={styles.desktopHeader}>
+                    <Text style={styles.desktopTitle}>Slate+</Text>
+                    <Text style={styles.desktopLinkText}>
+                        Available on{" "}
+                        <a href="https://testflight.apple.com/join/BMJT6Cbk" style={{ color: "#7c83ff", textDecoration: "none" }}>
+                            iOS
+                        </a>
                     </Text>
                 </View>
                 <View style={styles.dropdownContainer}>
@@ -89,31 +89,39 @@ export default function Index() {
                     )}
                 </View>
 
-                <View style={styles.desktopRow}>
-                    {/* Left Button */}
-                    <TouchableOpacity style={styles.desktopButton} onPress={previousCard} activeOpacity={0.7}>
-                        <Text style={styles.desktopButtonText}>←</Text>
+                {/* Card */}
+                <View style={styles.desktopCard}>
+                    <Text
+                        style={[
+                            styles.desktopPromptText,
+                            shuffledPrompts[currentIndex].length > 20 && { fontSize: 48 },
+                            shuffledPrompts[currentIndex].length > 35 && { fontSize: 36 },
+                        ]}
+                    >
+                        {shuffledPrompts[currentIndex]}
+                    </Text>
+                    <Text style={styles.landscapeCounter}>
+                        {currentIndex + 1} / {shuffledPrompts.length}
+                    </Text>
+                </View>
+
+                {/* Controls row: arrows + shuffle */}
+                <View style={styles.desktopControlsRow}>
+                    <TouchableOpacity style={styles.desktopNavButton} onPress={previousCard} activeOpacity={0.7}>
+                        <Text style={styles.desktopNavButtonText}>←</Text>
                     </TouchableOpacity>
 
-                    {/* Card */}
-                    <View style={styles.desktopCard}>
-                        <Text style={styles.landscapePromptText}>{shuffledPrompts[currentIndex]}</Text>
-                        <Text style={styles.landscapeCounter}>
-                            {currentIndex + 1} / {shuffledPrompts.length}
-                        </Text>
-                    </View>
+                    <TouchableOpacity
+                        style={[styles.desktopShuffleButton, isShuffled && styles.resetButton]}
+                        onPress={isShuffled ? resetCards : shuffleCards}
+                    >
+                        <Text style={styles.shuffleButtonText}>{isShuffled ? "↻ Reset Order" : "🔀 Shuffle Cards"}</Text>
+                    </TouchableOpacity>
 
-                    {/* Right Button */}
-                    <TouchableOpacity style={styles.desktopButton} onPress={nextCard} activeOpacity={0.7}>
-                        <Text style={styles.desktopButtonText}>→</Text>
+                    <TouchableOpacity style={styles.desktopNavButton} onPress={nextCard} activeOpacity={0.7}>
+                        <Text style={styles.desktopNavButtonText}>→</Text>
                     </TouchableOpacity>
                 </View>
-                <TouchableOpacity
-                    style={[styles.desktopShuffleButton, isShuffled && styles.resetButton]}
-                    onPress={isShuffled ? resetCards : shuffleCards}
-                >
-                    <Text style={styles.shuffleButtonText}>{isShuffled ? "↻ Reset Order" : "🔀 Shuffle Cards"}</Text>
-                </TouchableOpacity>
             </View>
         );
     } else {
@@ -143,16 +151,13 @@ export default function Index() {
             );
         }
 
-        // Portrait layout (original)
+        // Portrait layout
         return (
             <>
                 <Stack.Screen options={{ headerShown: false }} />
                 <View style={styles.container}>
                     <View style={styles.header}>
-                        <Text style={styles.title}>Slate Plus</Text>
-                        <Text style={styles.subtitle}>
-                            Card {currentIndex + 1} of {shuffledPrompts.length}
-                        </Text>
+                        <Text style={styles.mobileTitle}>Slate+</Text>
                     </View>
 
                     {/* Category Dropdown */}
@@ -196,25 +201,28 @@ export default function Index() {
                                 styles.card,
                                 {
                                     width: width - 60,
-                                    height: isLandscape ? "95%" : height * 0.45,
+                                    height: height * 0.45,
                                 },
                             ]}
                         >
-                            <Text style={styles.promptText}>{shuffledPrompts[currentIndex]}</Text>
+                            <Text
+                                style={styles.promptText}
+                                adjustsFontSizeToFit
+                                numberOfLines={1}
+                            >
+                                {shuffledPrompts[currentIndex]}
+                            </Text>
+                            <Text style={styles.mobileCounter}>
+                                {currentIndex + 1} / {shuffledPrompts.length}
+                            </Text>
                         </View>
                     </View>
 
-                    <View style={styles.controls}>
-                        <TouchableOpacity style={styles.button} onPress={previousCard}>
-                            <Text style={styles.buttonText}>← Previous</Text>
+                    <View style={styles.mobileControlsRow}>
+                        <TouchableOpacity style={styles.mobileNavButton} onPress={previousCard}>
+                            <Text style={styles.mobileNavButtonText}>←</Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button} onPress={nextCard}>
-                            <Text style={styles.buttonText}>Next →</Text>
-                        </TouchableOpacity>
-                    </View>
-
-                    <View style={styles.bottomControls}>
                         <TouchableOpacity
                             style={[styles.shuffleButton, isShuffled && styles.resetButton]}
                             onPress={isShuffled ? resetCards : shuffleCards}
@@ -222,6 +230,10 @@ export default function Index() {
                             <Text style={styles.shuffleButtonText}>
                                 {isShuffled ? "↻ Reset Order" : "🔀 Shuffle Cards"}
                             </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.mobileNavButton} onPress={nextCard}>
+                            <Text style={styles.mobileNavButtonText}>→</Text>
                         </TouchableOpacity>
                     </View>
                 </View>

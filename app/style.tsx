@@ -17,6 +17,12 @@ export const styles = StyleSheet.create({
         color: "#fff",
         marginBottom: 8,
     },
+    mobileTitle: {
+        fontSize: 36,
+        fontWeight: "800",
+        color: "#fff",
+        letterSpacing: 2,
+    },
     subtitle: {
         fontSize: 16,
         color: "#aaa",
@@ -103,28 +109,33 @@ export const styles = StyleSheet.create({
         color: "#1a1a2e",
         textAlign: "center",
     },
-    controls: {
+    mobileControlsRow: {
         flexDirection: "row",
-        justifyContent: "space-around",
-        paddingHorizontal: 20,
-        marginTop: 30,
-    },
-    button: {
-        backgroundColor: "#0f3460",
-        paddingVertical: 15,
-        paddingHorizontal: 30,
-        borderRadius: 10,
-        minWidth: 140,
-    },
-    buttonText: {
-        color: "#fff",
-        fontSize: 18,
-        fontWeight: "600",
-        textAlign: "center",
-    },
-    bottomControls: {
+        justifyContent: "center",
         alignItems: "center",
-        marginTop: 20,
+        gap: 12,
+        paddingHorizontal: 20,
+        marginTop: 24,
+    },
+    mobileNavButton: {
+        backgroundColor: "#0f3460",
+        paddingVertical: 12,
+        paddingHorizontal: 24,
+        borderRadius: 10,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    mobileNavButtonText: {
+        color: "#fff",
+        fontSize: 22,
+        fontWeight: "bold",
+    },
+    mobileCounter: {
+        position: "absolute",
+        bottom: 16,
+        fontSize: 14,
+        color: "#999",
+        fontWeight: "600",
     },
     shuffleButton: {
         backgroundColor: "#16213e",
@@ -200,11 +211,26 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#1a1a2e",
         height: "100%",
+        paddingVertical: 30,
+    },
+    desktopHeader: {
+        alignItems: "center",
+        marginBottom: 16,
+    },
+    desktopTitle: {
+        fontSize: 42,
+        fontWeight: "800",
+        color: "#fff",
+        letterSpacing: 2,
+    },
+    desktopLinkText: {
+        fontSize: 14,
+        color: "#888",
+        marginTop: 6,
     },
     desktopCard: {
         display: "flex",
         backgroundColor: "#fff",
-        margin: 20,
         borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
@@ -217,24 +243,34 @@ export const styles = StyleSheet.create({
         shadowOpacity: 0.3,
         shadowRadius: 20,
         elevation: 10,
-        height: "95%",
+        width: 600,
+        height: 350,
+        marginVertical: 20,
     },
-    desktopRow: {
+    desktopPromptText: {
+        fontSize: 72,
+        fontWeight: "bold",
+        color: "#1a1a2e",
+        textAlign: "center",
+    },
+    desktopControlsRow: {
         display: "flex",
         flexDirection: "row",
         alignItems: "center",
+        gap: 16,
+        marginTop: 12,
     },
-    desktopButton: {
-        height: "100%",
+    desktopNavButton: {
         justifyContent: "center",
         alignItems: "center",
         backgroundColor: "#0f3460",
-        borderRadius: 20,
-        padding: 20,
+        borderRadius: 10,
+        paddingVertical: 12,
+        paddingHorizontal: 24,
     },
-    desktopButtonText: {
+    desktopNavButtonText: {
         color: "#fff",
-        fontSize: 72,
+        fontSize: 24,
         fontWeight: "bold",
     },
     desktopShuffleButton: {
@@ -244,7 +280,6 @@ export const styles = StyleSheet.create({
         borderRadius: 10,
         borderWidth: 2,
         borderColor: "#0f3460",
-        marginTop: 20,
     },
     linkText: {
         fontSize: 16,
