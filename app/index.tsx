@@ -1,5 +1,5 @@
 import { Stack } from "expo-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Platform, Text, TouchableOpacity, useWindowDimensions, View } from "react-native";
 import CATEGORIES from "./categories.json";
 import { styles } from "./style";
@@ -14,6 +14,7 @@ export default function Index() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
     const { width, height } = useWindowDimensions();
+    const [layoutReady, setLayoutReady] = useState(Platform.OS !== "web");
 
     const changeCategory = (category: CategoryName) => {
         setSelectedCategory(category);
@@ -44,7 +45,17 @@ export default function Index() {
         setIsShuffled(false);
     };
 
+    useEffect(() => {
+        if (Platform.OS === "web" && width > 0 && height > 0) {
+            setLayoutReady(true);
+        }
+    }, [width, height]);
+
     const isLandscape = width > height;
+
+    if (!layoutReady) {
+        return <View style={styles.container} />;
+    }
 
     if (Platform.OS === "web" && isLandscape) {
         return (
