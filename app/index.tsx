@@ -276,7 +276,7 @@ export default function Index() {
                             styles.card,
                             {
                                 width: width - 60,
-                                height: height * 0.45,
+                                height: height * 0.35,
                             },
                         ]}
                     >

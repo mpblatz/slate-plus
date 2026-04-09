@@ -5,8 +5,8 @@ export const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "#f8f8f8",
-        paddingTop: 60,
-        paddingBottom: 40,
+        paddingTop: 50,
+        paddingBottom: 30,
     },
     header: {
         alignItems: "center",
@@ -100,7 +100,7 @@ export const styles = StyleSheet.create({
         alignItems: "center",
         gap: 10,
         paddingHorizontal: 20,
-        marginTop: 24,
+        marginTop: 16,
     },
     mobileNavButton: {
         backgroundColor: "#fff",
