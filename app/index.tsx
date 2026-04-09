@@ -9,14 +9,14 @@ const CATEGORY_NAMES = Object.keys(CATEGORIES) as CategoryName[];
 
 const DECK_META: Record<string, { label: string; color: string }> = {
     "Pop Culture & Entertainment": { label: "Pop\nCulture", color: "#e74c3c" },
-    "Food & Drink":               { label: "Food &\nDrink", color: "#e67e22" },
-    "Travel & Adventure":         { label: "Travel &\nAdventure", color: "#2ecc71" },
-    "Tech & Modern Life":         { label: "Tech &\nModern", color: "#3498db" },
-    "Classic":                    { label: "Classic", color: "#1a1a1a" },
-    "Classic 2":                  { label: "Classic\n2", color: "#4a4a4a" },
-    "Sports & Fitness":           { label: "Sports &\nFitness", color: "#9b59b6" },
-    "Music & Sounds":             { label: "Music &\nSounds", color: "#e84393" },
-    "Nature & Weather":           { label: "Nature &\nWeather", color: "#00b894" },
+    "Food & Drink": { label: "Food &\nDrink", color: "#e67e22" },
+    "Travel & Adventure": { label: "Travel &\nAdventure", color: "#2ecc71" },
+    "Tech & Modern Life": { label: "Tech &\nModern", color: "#3498db" },
+    Classic: { label: "Classic", color: "#1a1a1a" },
+    "Classic 2": { label: "Classic\n2", color: "#4a4a4a" },
+    "Sports & Fitness": { label: "Sports &\nFitness", color: "#9b59b6" },
+    "Music & Sounds": { label: "Music &\nSounds", color: "#e84393" },
+    "Nature & Weather": { label: "Nature &\nWeather", color: "#00b894" },
 };
 
 function AutoShrinkText({
@@ -100,10 +100,6 @@ function DeckShelf({
     onSelect: (c: CategoryName) => void;
     small?: boolean;
 }) {
-    const cardSize = small
-        ? { width: 64, height: 90 }
-        : { width: 80, height: 112 };
-
     return (
         <View style={[styles.shelfContainer, small && { marginBottom: 10 }]}>
             <Text style={[styles.shelfLabel, small && { fontSize: 10, marginBottom: 8 }]}>Decks</Text>
@@ -121,15 +117,17 @@ function DeckShelf({
                             key={category}
                             style={[
                                 styles.deckCard,
-                                cardSize,
+                                { width: 80, height: 112 },
                                 { backgroundColor: meta.color },
                                 isSelected && styles.deckCardActive,
                             ]}
                             onPress={() => onSelect(category)}
                             activeOpacity={0.8}
                         >
-                            <Text style={[styles.deckCardCount, small && { fontSize: 8 }]}>{count} cards</Text>
-                            <Text style={[styles.deckCardName, small && { fontSize: 9, lineHeight: 12 }]}>{meta.label}</Text>
+                            <Text style={[styles.deckCardCount, small && { fontSize: 8.5 }]}>{count} cards</Text>
+                            <Text style={[styles.deckCardName, small && { fontSize: 10, lineHeight: 13 }]}>
+                                {meta.label}
+                            </Text>
                         </TouchableOpacity>
                     );
                 })}
@@ -195,7 +193,10 @@ export default function Index() {
                     <Text style={styles.desktopTitle}>Slate+</Text>
                     <Text style={styles.desktopLinkText}>
                         Available on{" "}
-                        <a href="https://testflight.apple.com/join/BMJT6Cbk" style={{ color: "#6b7280", textDecoration: "underline" }}>
+                        <a
+                            href="https://testflight.apple.com/join/BMJT6Cbk"
+                            style={{ color: "#6b7280", textDecoration: "underline" }}
+                        >
                             iOS
                         </a>
                     </Text>
@@ -206,11 +207,7 @@ export default function Index() {
 
                 {/* Card */}
                 <View style={styles.desktopCard}>
-                    <AutoShrinkText
-                        text={shuffledPrompts[currentIndex]}
-                        baseSize={64}
-                        minSize={28}
-                    />
+                    <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={64} minSize={28} />
                     <Text style={styles.landscapeCounter}>
                         {currentIndex + 1} / {shuffledPrompts.length}
                     </Text>
@@ -248,11 +245,7 @@ export default function Index() {
                 </TouchableOpacity>
 
                 <View style={styles.landscapeCard}>
-                    <AutoShrinkText
-                        text={shuffledPrompts[currentIndex]}
-                        baseSize={80}
-                        minSize={32}
-                    />
+                    <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={80} minSize={32} />
                     <Text style={styles.landscapeCounter}>
                         {currentIndex + 1} / {shuffledPrompts.length}
                     </Text>
@@ -287,11 +280,7 @@ export default function Index() {
                             },
                         ]}
                     >
-                        <AutoShrinkText
-                            text={shuffledPrompts[currentIndex]}
-                            baseSize={52}
-                            minSize={24}
-                        />
+                        <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={52} minSize={24} />
                         <Text style={styles.mobileCounter}>
                             {currentIndex + 1} / {shuffledPrompts.length}
                         </Text>
