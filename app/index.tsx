@@ -188,50 +188,21 @@ export default function Index() {
     // ── Desktop / Web Landscape ───────────────────────────────────────
     if (Platform.OS === "web" && isLandscape) {
         return (
-            <View style={styles.desktopContainer}>
-                <View style={styles.desktopHeader}>
-                    <Text style={styles.desktopTitle}>Slate+</Text>
-                    <Text style={styles.desktopLinkText}>
-                        Available on{" "}
-                        <a
-                            href="https://testflight.apple.com/join/BMJT6Cbk"
-                            style={{ color: "#6b7280", textDecoration: "underline" }}
-                        >
-                            iOS
-                        </a>
-                    </Text>
-                </View>
+            <View style={styles.landscapeContainer}>
+                <TouchableOpacity style={styles.landscapeButton} onPress={previousCard} activeOpacity={0.7}>
+                    <Text style={styles.landscapeButtonText}>&larr;</Text>
+                </TouchableOpacity>
 
-                {/* Deck shelf */}
-                <DeckShelf selected={selectedCategory} onSelect={changeCategory} small />
-
-                {/* Card */}
-                <View style={styles.desktopCard}>
-                    <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={64} minSize={28} />
+                <View style={styles.landscapeCard}>
+                    <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={80} minSize={32} />
                     <Text style={styles.landscapeCounter}>
                         {currentIndex + 1} / {shuffledPrompts.length}
                     </Text>
                 </View>
 
-                {/* Controls */}
-                <View style={styles.desktopControlsRow}>
-                    <TouchableOpacity style={styles.desktopNavButton} onPress={previousCard} activeOpacity={0.7}>
-                        <Text style={styles.desktopNavButtonText}>&larr;</Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity
-                        style={[styles.desktopShuffleButton, isShuffled && styles.resetButton]}
-                        onPress={isShuffled ? resetCards : shuffleCards}
-                    >
-                        <Text style={[styles.shuffleButtonText, isShuffled && styles.resetButtonText]}>
-                            {isShuffled ? "Reset" : "Shuffle"}
-                        </Text>
-                    </TouchableOpacity>
-
-                    <TouchableOpacity style={styles.desktopNavButton} onPress={nextCard} activeOpacity={0.7}>
-                        <Text style={styles.desktopNavButtonText}>&rarr;</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.landscapeButton} onPress={nextCard} activeOpacity={0.7}>
+                    <Text style={styles.landscapeButtonText}>&rarr;</Text>
+                </TouchableOpacity>
             </View>
         );
     }
