@@ -191,6 +191,26 @@ export const styles = StyleSheet.create({
         fontWeight: "600",
     },
 
+    // ── Fullscreen toggle ────────────────────────────────────────────────
+    fullscreenButton: {
+        position: "absolute",
+        top: 12,
+        right: 12,
+        width: 32,
+        height: 32,
+        borderRadius: 8,
+        backgroundColor: "rgba(255,255,255,0.9)",
+        borderWidth: 1,
+        borderColor: "rgba(0,0,0,0.08)",
+        justifyContent: "center",
+        alignItems: "center",
+        zIndex: 1,
+    },
+    fullscreenButtonText: {
+        fontSize: 15,
+        color: "#1a1a1a",
+    },
+
     // ── Desktop ───────────────────────────────────────────────────────
     desktopContainer: {
         display: "flex",

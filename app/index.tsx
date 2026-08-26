@@ -6,6 +6,7 @@ import { styles } from "./style";
 
 type CategoryName = keyof typeof CATEGORIES;
 const CATEGORY_NAMES = Object.keys(CATEGORIES) as CategoryName[];
+const MOBILE_BREAKPOINT = 768;
 
 const DECK_META: Record<string, { label: string; color: string }> = {
     "Pop Culture & Entertainment": { label: "Pop\nCulture", color: "#e74c3c" },
@@ -144,6 +145,7 @@ export default function Index() {
 
     const { width, height } = useWindowDimensions();
     const [layoutReady, setLayoutReady] = useState(Platform.OS !== "web");
+    const [isFullscreen, setIsFullscreen] = useState(false);
 
     const changeCategory = (category: CategoryName) => {
         setSelectedCategory(category);
@@ -179,14 +181,72 @@ export default function Index() {
         }
     }, [width, height]);
 
-    const isLandscape = width > height;
+    // Horizontal (arrows-on-the-side) layout is opt-in only, via the fullscreen
+    // button — it's never triggered automatically by orientation or window shape.
+    useEffect(() => {
+        if (Platform.OS !== "web") return;
+        const handleFullscreenChange = () => {
+            if (!document.fullscreenElement) {
+                setIsFullscreen(false);
+                try {
+                    (screen.orientation as ScreenOrientation & { unlock?: () => void })?.unlock?.();
+                } catch {
+                    // orientation unlock unsupported — nothing to do
+                }
+            }
+        };
+        document.addEventListener("fullscreenchange", handleFullscreenChange);
+        return () => document.removeEventListener("fullscreenchange", handleFullscreenChange);
+    }, []);
+
+    const enterFullscreen = async () => {
+        if (Platform.OS !== "web") return;
+        try {
+            await document.documentElement.requestFullscreen();
+        } catch {
+            // fullscreen request denied/unsupported — still show the horizontal layout
+        }
+        try {
+            // Only works on Android Chrome/Edge; iOS Safari has no orientation-lock API,
+            // so on iPhone/iPad the user still has to physically rotate the device.
+            await (
+                screen.orientation as ScreenOrientation & { lock?: (orientation: string) => Promise<void> }
+            )?.lock?.("landscape");
+        } catch {
+            // orientation lock unsupported — ignore
+        }
+        setIsFullscreen(true);
+    };
+
+    const exitFullscreen = async () => {
+        if (Platform.OS !== "web") return;
+        try {
+            if (document.fullscreenElement) {
+                await document.exitFullscreen();
+            }
+        } catch {
+            // ignore
+        }
+        try {
+            screen.orientation?.unlock?.();
+        } catch {
+            // ignore
+        }
+        setIsFullscreen(false);
+    };
+
+    // On web, only phone/tablet-sized viewports count as "mobile" — width-only on
+    // purpose: desktop windows are essentially never this narrow, but desktop
+    // *height* commonly dips below the breakpoint (e.g. a 1366x768 laptop screen),
+    // so folding height into this check would misclassify real desktops.
+    const isMobile = Platform.OS !== "web" || width < MOBILE_BREAKPOINT;
 
     if (!layoutReady) {
         return <View style={styles.container} />;
     }
 
-    // ── Desktop / Web Landscape ───────────────────────────────────────
-    if (Platform.OS === "web" && isLandscape) {
+    // ── Fullscreen (horizontal, arrows-on-the-side) ─────────────────────
+    if (isFullscreen) {
         return (
             <View style={styles.landscapeContainer}>
                 <TouchableOpacity style={styles.landscapeButton} onPress={previousCard} activeOpacity={0.7}>
@@ -194,6 +254,9 @@ export default function Index() {
                 </TouchableOpacity>
 
                 <View style={styles.landscapeCard}>
+                    <TouchableOpacity style={styles.fullscreenButton} onPress={exitFullscreen} activeOpacity={0.7}>
+                        <Text style={styles.fullscreenButtonText}>&#10005;</Text>
+                    </TouchableOpacity>
                     <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={80} minSize={32} />
                     <Text style={styles.landscapeCounter}>
                         {currentIndex + 1} / {shuffledPrompts.length}
@@ -207,25 +270,54 @@ export default function Index() {
         );
     }
 
-    // ── Mobile Landscape ──────────────────────────────────────────────
-    if (isLandscape) {
+    // ── Desktop ────────────────────────────────────────────────────────
+    if (!isMobile) {
         return (
-            <View style={styles.landscapeContainer}>
-                <TouchableOpacity style={styles.landscapeButton} onPress={previousCard} activeOpacity={0.7}>
-                    <Text style={styles.landscapeButtonText}>&larr;</Text>
-                </TouchableOpacity>
+            <>
+                <Stack.Screen options={{ headerShown: false }} />
+                <View style={styles.desktopContainer}>
+                    <View style={styles.desktopHeader}>
+                        <Text style={styles.desktopTitle}>Slate+</Text>
+                    </View>
 
-                <View style={styles.landscapeCard}>
-                    <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={80} minSize={32} />
-                    <Text style={styles.landscapeCounter}>
-                        {currentIndex + 1} / {shuffledPrompts.length}
-                    </Text>
+                    <DeckShelf selected={selectedCategory} onSelect={changeCategory} />
+
+                    <View style={styles.desktopCard}>
+                        {Platform.OS === "web" && (
+                            <TouchableOpacity
+                                style={styles.fullscreenButton}
+                                onPress={enterFullscreen}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.fullscreenButtonText}>&#9974;</Text>
+                            </TouchableOpacity>
+                        )}
+                        <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={64} minSize={28} />
+                        <Text style={styles.landscapeCounter}>
+                            {currentIndex + 1} / {shuffledPrompts.length}
+                        </Text>
+                    </View>
+
+                    <View style={styles.desktopControlsRow}>
+                        <TouchableOpacity style={styles.desktopNavButton} onPress={previousCard}>
+                            <Text style={styles.desktopNavButtonText}>&larr;</Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity
+                            style={[styles.desktopShuffleButton, isShuffled && styles.resetButton]}
+                            onPress={isShuffled ? resetCards : shuffleCards}
+                        >
+                            <Text style={[styles.shuffleButtonText, isShuffled && styles.resetButtonText]}>
+                                {isShuffled ? "Reset" : "Shuffle"}
+                            </Text>
+                        </TouchableOpacity>
+
+                        <TouchableOpacity style={styles.desktopNavButton} onPress={nextCard}>
+                            <Text style={styles.desktopNavButtonText}>&rarr;</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-
-                <TouchableOpacity style={styles.landscapeButton} onPress={nextCard} activeOpacity={0.7}>
-                    <Text style={styles.landscapeButtonText}>&rarr;</Text>
-                </TouchableOpacity>
-            </View>
+            </>
         );
     }
 
@@ -251,6 +343,15 @@ export default function Index() {
                             },
                         ]}
                     >
+                        {Platform.OS === "web" && (
+                            <TouchableOpacity
+                                style={styles.fullscreenButton}
+                                onPress={enterFullscreen}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={styles.fullscreenButtonText}>&#9974;</Text>
+                            </TouchableOpacity>
+                        )}
                         <AutoShrinkText text={shuffledPrompts[currentIndex]} baseSize={52} minSize={24} />
                         <Text style={styles.mobileCounter}>
                             {currentIndex + 1} / {shuffledPrompts.length}
